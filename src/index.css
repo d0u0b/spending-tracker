@@ -1,0 +1,233 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---------- 設計 token ---------- */
+:root {
+  --bg: #f4f4f7;
+  --blob-1: rgb(99 102 241 / 0.2);
+  --blob-2: rgb(20 184 166 / 0.18);
+  --blob-3: rgb(251 146 60 / 0.16);
+
+  /* 極簡內容層：接近實色，數字好讀 */
+  --surface: rgb(255 255 255 / 0.86);
+  --surface-solid: #ffffff;
+  --surface-hover: rgb(0 0 0 / 0.035);
+  --line: rgb(0 0 0 / 0.07);
+  --text: #111114;
+  --text-2: #5b5b66;
+  --text-3: #8e8e99;
+  --accent: #2563eb;
+  --accent-soft: rgb(37 99 235 / 0.1);
+  --danger: #dc2626;
+
+  /* 液態玻璃層：只用在導覽與浮動控制 */
+  --glass-bg: rgb(255 255 255 / 0.42);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glass-hl: rgb(255 255 255 / 0.95);
+  --glass-hl-2: rgb(255 255 255 / 0.35);
+  --glass-shadow: 0 10px 30px rgb(15 23 42 / 0.12), 0 1px 3px rgb(15 23 42 / 0.08);
+  --glass-active: rgb(255 255 255 / 0.7);
+
+  --red: #e5484d;
+  --green: #18a058;
+}
+
+[data-theme='dark'] {
+  --bg: #09090d;
+  --blob-1: rgb(99 102 241 / 0.3);
+  --blob-2: rgb(20 184 166 / 0.22);
+  --blob-3: rgb(251 146 60 / 0.16);
+
+  --surface: rgb(24 24 31 / 0.82);
+  --surface-solid: #18181f;
+  --surface-hover: rgb(255 255 255 / 0.05);
+  --line: rgb(255 255 255 / 0.08);
+  --text: #f3f3f6;
+  --text-2: #a5a5b0;
+  --text-3: #6e6e7a;
+  --accent: #60a5fa;
+  --accent-soft: rgb(96 165 250 / 0.14);
+  --danger: #f87171;
+
+  --glass-bg: rgb(44 44 58 / 0.38);
+  --glass-border: rgb(255 255 255 / 0.13);
+  --glass-hl: rgb(255 255 255 / 0.32);
+  --glass-hl-2: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 10px 30px rgb(0 0 0 / 0.45), 0 1px 3px rgb(0 0 0 / 0.3);
+  --glass-active: rgb(255 255 255 / 0.14);
+
+  --red: #ff6369;
+  --green: #3dd68c;
+}
+
+/* 台灣慣例紅漲綠跌；國際慣例綠漲紅跌 */
+[data-updown='tw'] {
+  --up: var(--red);
+  --down: var(--green);
+}
+[data-updown='us'] {
+  --up: var(--green);
+  --down: var(--red);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-solid: var(--surface-solid);
+  --color-surface-hover: var(--surface-hover);
+  --color-line: var(--line);
+  --color-fg: var(--text);
+  --color-fg-2: var(--text-2);
+  --color-fg-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --font-sans: -apple-system, 'SF Pro Text', 'Segoe UI', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+}
+
+/* ---------- 基礎 ---------- */
+html {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+body {
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+}
+/* 背景色塊：讓玻璃有東西可以折射 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40rem 30rem at 10% -5%, var(--blob-1), transparent 70%),
+    radial-gradient(36rem 28rem at 95% 20%, var(--blob-2), transparent 70%),
+    radial-gradient(40rem 30rem at 40% 110%, var(--blob-3), transparent 70%);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ---------- 元件 ---------- */
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(18px) saturate(180%);
+    box-shadow:
+      inset 1.5px 1.5px 0 -0.5px var(--glass-hl),
+      inset -1px -1px 0 -0.5px var(--glass-hl-2),
+      var(--glass-shadow);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid var(--line);
+    background: var(--surface-solid);
+    transition:
+      background 0.15s,
+      transform 0.1s;
+  }
+  .btn:hover {
+    background: var(--surface-hover);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+    border-color: transparent;
+  }
+  .btn-primary:hover {
+    background: var(--text);
+    opacity: 0.88;
+  }
+  .btn-danger {
+    color: var(--danger);
+  }
+
+  .input {
+    width: 100%;
+    height: 2.75rem;
+    padding: 0 0.875rem;
+    border-radius: 0.875rem;
+    border: 1px solid var(--line);
+    background: var(--surface-solid);
+    font-size: 0.9375rem;
+    outline: none;
+  }
+  .input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--text-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 2rem;
+    padding: 0 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-size: 0.8125rem;
+    color: var(--text-2);
+    background: var(--surface-solid);
+  }
+  .chip:disabled {
+    opacity: 0.35;
+  }
+  .chip[data-active='true'] {
+    background: var(--text);
+    color: var(--bg);
+    border-color: transparent;
+  }
+}
+
+/* Chromium 支援把 SVG 濾鏡用在 backdrop-filter，可做出邊緣折射；其他瀏覽器退回一般模糊 */
+html.lg-refract .glass {
+  backdrop-filter: url(#lg-refract) blur(14px) saturate(180%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  html.lg-refract .glass {
+    background: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

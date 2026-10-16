@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+.DS_Store
+# 個人資料匯出檔，避免誤 commit 到公開 repo
+*-backup*.json
+*.tsbuildinfo
+.claude/settings.local.json
